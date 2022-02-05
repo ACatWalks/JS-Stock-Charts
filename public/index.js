@@ -54,45 +54,32 @@ async function main() {
         }
     }
     function getHighest(values){
-        let highest = values[0];
+        let highest = values[0].high;
         for(let i=1; i<values.length; i++){
-            if(values[i] > highest){
-                highest = values[i];
+            if(values[i].high > highest){
+                highest = values[i].high;
             }
         }
+        console.log(highest);
         return highest;
     }
     
     new Chart(highestPriceChartCanvas.getContext('2d'), {
         type: 'bar',
         data: {
-            labels: ['GME', 'MSFT', 'DIS', 'BTNX'],
-            datasets: [
-                {
-                    label: 'GME',
-                    data: getHighest(GME.values),
-                    backgroundColor: getColor('GME'),
-                    borderColor:getColor('GME')
-                },
-                {
-                    label: 'MSFT',
-                    data: getHighest(MSFT.values),
-                    backgroundColor: getColor('MSFT'),
-                    borderColor: getColor('MSFT')
-                },
-                {
-                    label: 'DIS',
-                    data: getHighest(DIS.values),
-                    backgroundColor: getColor('DIS'),
-                    borderColor: getColor('DIS')
-                },
-                {
-                    label: 'BNTX',
-                    data: getHighest(BNTX.values),
-                    backgroundColor: getColor('BNTX'),
-                    borderColor: getColor('BNTX')
-                }
-            ]
+            labels: stocks.map(stock => stock.meta.symbol),
+            datasets: [{
+                label: 'Highest',
+                backgroundColor: stocks.map(stock => (
+                    getColor(stock.meta.symbol)
+                )),
+                borderColor: stocks.map(stock => (
+                    getColor(stock.meta.symbol)
+                )),
+                data: stocks.map(stock => (
+                    getHighest(stock.values)
+                ))
+            }]
         }
     });
     function getAverage(values){
